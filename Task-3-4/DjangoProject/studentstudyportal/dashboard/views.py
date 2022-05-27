@@ -1,10 +1,13 @@
 from multiprocessing import context
+from multiprocessing.connection import answer_challenge
 from unittest import result
 from django.shortcuts import redirect, render
 from . forms import *
 from django.contrib import messages
 from django.views import generic
 from youtubesearchpython import VideosSearch
+import requests
+import wikipedia
 
 # Create your views here.
 def home(request):
@@ -172,3 +175,55 @@ def update_todo(request, pk=None):
 def delete_todo(request, pk=None):
     Todo.objects.get(id=pk).delete()
     return redirect("todo")
+
+
+def dictionary(request):
+    if request.method == "POST":
+        form = DashboardForm(request.POST)
+        text = request.POST['text']
+        url = "https://api.dictionaryapi.dev/api/v2/entries/en_US/"+text
+        r = requests.get(url)
+        answer = r.json()
+        try:
+            phonetics = answer[0]['phonetics'][0]['text']
+            audio = answer[0]['phonetics'][0]['audio']
+            definition = answer[0]['meanings'][0]['definitions'][0]['definition']
+            example = answer[0]['meanings'][0]['definitions'][0]['example']
+            context = {
+                'form':form,
+                'input':text,
+                'phonetics':phonetics,
+                'audio':audio,
+                'definition':definition,
+                'example':example
+            }
+        except:
+            context = {
+                'form':form,
+                'input':''
+            }
+        return render(request, "dashboard/dictionary.html", context)
+    else:
+        form = DashboardForm()
+        context = {'form':form}
+    return render(request, "dashboard/dictionary.html", context)
+
+
+def wiki(request):
+    if request.method == 'POST':
+        text = request.POST['text']
+        form = DashboardForm(request.POST)
+        search = wikipedia.page(text)
+        context = {
+            'form':form,
+            'title':search.title,
+            'link':search.url,
+            'details':search.summary
+        }
+        return render(request, "dashboard/wiki.html", context)
+    else:
+        form = DashboardForm()
+        context = {
+            'form':form
+        }
+    return render(request, "dashboard/wiki.html", context)
