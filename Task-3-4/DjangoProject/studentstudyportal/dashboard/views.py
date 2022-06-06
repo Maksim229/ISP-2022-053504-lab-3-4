@@ -9,6 +9,9 @@ from youtubesearchpython import VideosSearch
 import requests
 import wikipedia
 from django.contrib.auth.decorators import login_required
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def home(request):
@@ -26,6 +29,7 @@ def notes(request):
                 description=request.POST['description'])
             notes.save()
         messages.success(request,f"Notes Added from {request.user.username} Successfully!")
+        logger.info(f'{request.user.username} added one note')
     else:
         form = NotesForm()
     notes = Notes.objects.filter(user=request.user)
@@ -174,8 +178,10 @@ def update_todo(request, pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
         todo.is_finished = False
+        logger.info(f'{todo} is not finished')
     else:
         todo.is_finished = True
+        logger.info(f'{todo} is finished')
     todo.save()
     return redirect('todo')
 
@@ -245,6 +251,7 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
+            logger.info(f'{username} registered')
             return redirect("login")
     else:
         form = UserRegistrationForm()
@@ -260,6 +267,7 @@ def profile(request):
     todos = Todo.objects.filter(is_finished=False, user=request.user)
     if len(homeworks) == 0:
         homework_done = True
+        logger.info(f'Homework len == {len(homeworks)}')
     else:
         homework_done = False
 
