@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7j3&92kbj3*jofvu8kh_m(d0i(uckz&zr_78%cze1h-1$d5(k#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
-    'crispy_forms'
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +165,5 @@ LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+CSRF_TRUSTED_ORIGINS = ['https://studentstudyportal-isp.herokuapp.com']
