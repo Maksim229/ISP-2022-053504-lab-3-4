@@ -6,3 +6,5 @@ youtube-search-python==1.6.5
 requests==2.27.1
 wiki==0.8.2
 wikipedia==1.4.0
+dj_database_url
+psycopg2-binary
