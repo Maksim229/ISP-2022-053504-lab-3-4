@@ -1,4 +1,4 @@
-# Slysh Maksim 053504
+# Gleb Zikunov 053504
 
 Deployed here: https://studentstudyportal-isp.herokuapp.com/
 
